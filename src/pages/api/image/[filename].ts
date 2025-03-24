@@ -28,12 +28,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ error: "File not found" });
     }
 
-    const stream = s3Response.Body instanceof Readable ? s3Response.Body : Readable.from(s3Response.Body as any);
-
     res.setHeader("Content-Type", s3Response.ContentType || "image/jpeg");
     res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
 
-    stream.pipe(res);
+    (s3Response.Body as Readable).pipe(res);
   }
   catch(err) {
     console.error(err)

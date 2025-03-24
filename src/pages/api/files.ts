@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 async function listAllFiles(bucketName: string) {
   let isTruncated = true;
   let continuationToken: string | undefined;
-  let allFiles: string[] = [];
+  const allFiles: string[] = [];
 
   try {
       while (isTruncated) {

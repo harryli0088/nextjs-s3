@@ -13,7 +13,7 @@ const getImages = async (): Promise<string[]> => {
   return await response.json();
 };
 
-const uploadImage = async (file: File): Promise<any> => {
+const uploadImage = async (file: File): Promise<{ message: string }> => {
   const formData = new FormData();
   formData.append("image", file);
   formData.append("test","123")
@@ -96,7 +96,7 @@ export default function Home() {
           <br/>
           {query.data && query.data.map((f,i) => {
             return (
-              <Image src={`/api/image/${f}`} alt={f} width={300} height={300}/>
+              <Image key={i} src={`/api/image/${f}`} alt={f} width={300} height={300}/>
             )
           })}
           {query.isLoading && <p>Loading...</p>}
