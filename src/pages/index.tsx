@@ -99,6 +99,7 @@ export default function Home() {
               <Image key={i} src={`/api/image/${f}`} alt={f} width={300} height={300}/>
             )
           })}
+          {query.data && query.data.length===0 && <p>No images</p>}
           {query.isLoading && <p>Loading...</p>}
           {query.error && <p>{`${query.error}`}</p>}
         </section>

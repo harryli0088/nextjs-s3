@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import formidable from "formidable";
 import fs from "fs";
 import { v4 as uuidv4 } from 'uuid';
 import sharp from "sharp";
-import { s3 } from "@/utils/s3";
+import { BUCKET_NAME, s3, uploadS3Object } from "@/utils/s3";
 
 
 export const config = {
@@ -36,19 +35,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const fileKey = uuidv4() + ".jpg";
 
       const standardizedBuffer = await processImage(fileBuffer,file.mimetype || "")
-      const args = {
-        Bucket: process.env.S3_BUCKET_NAME!,
+      
+      // Upload file to S3
+      await uploadS3Object(s3, {
+        Bucket: BUCKET_NAME,
         Key: fileKey,
         Body: standardizedBuffer,
         ContentType: file.mimetype || "",
         ContentLength: standardizedBuffer.length,
-      }
-      console.log("args",args)
-      
-      // Upload file to S3
-      await s3.send(
-        new PutObjectCommand(args)
-      );
+      })
 
       res.status(200).json({ message: "File uploaded successfully" });
     } catch (uploadError) {
